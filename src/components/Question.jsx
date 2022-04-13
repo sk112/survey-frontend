@@ -44,20 +44,22 @@ export function Question({ q: question, index, setAnswers, varname}){
                 <td key={"question"+index} className="mw-50 w-50">
                         <b>{index}. {question.questiontext}</b>
                 </td>
-                <td key={"option"+index}>
+                {/* <td key={"option"+index}> */}
                     {
                         [...Array(7)].map((v, i) => {
                             let option = "option"+ (i+1);
                             let id = "option"+(index+1) +""+ (i+1);
                             return (
-                                <input type="radio"  id={id} value={question[option]} onChange={checkHandler} checked={(check !== null && check === id)?true:false}/>
+                                <td className="text-center">
+                                    <input type="radio" id={id} value={question[option]} onChange={checkHandler} checked={(check !== null && check === id)?true:false}/>
+                                </td>
                             )
                         })
                     }
                     {/* <div>
                         <button onClick={ClearHandler}>clear</button>
                     </div> */}
-                </td>
+                {/* </td> */}
         </>
     )
 
