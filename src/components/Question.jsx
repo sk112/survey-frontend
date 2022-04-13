@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
-import styles from './Questions.module.css';
+import clearSvg from './../assets/icons8-close-30.svg';
+import './Questions.css';
 
 export function Question({ q: question, index, setAnswers, varname}){
 
@@ -56,9 +57,11 @@ export function Question({ q: question, index, setAnswers, varname}){
                             )
                         })
                     }
-                    {/* <div>
-                        <button onClick={ClearHandler}>clear</button>
-                    </div> */}
+                    <td className="text-center">
+                        <button className="clear" onClick={ClearHandler} style={{border: "none", backgroundColor: 'unset', width: "100px"}}>
+                            <img src={clearSvg} alt="clear"></img>
+                        </button>
+                    </td>
                 {/* </td> */}
         </>
     )

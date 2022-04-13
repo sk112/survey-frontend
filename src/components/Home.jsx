@@ -90,7 +90,7 @@ export default function Home() {
         (questions !== null && questions.length > 0) ?
             (
                 <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                <table class="table table-bordered container">
+                <table className="table table-bordered container">
                     <thead>
                         <tr>
                             <td className="w-100">
@@ -106,6 +106,9 @@ export default function Home() {
                                     )
                                 })
                             }
+                            <td className="text-center">
+                                Clear
+                            </td>
                         </tr>
                     </thead>
                     <tbody>

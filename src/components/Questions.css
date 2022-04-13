@@ -1,0 +1,9 @@
+
+
+.clear {
+    background-color: 'red';
+}
+.clear:hover { 
+    
+    transition: scale(1.2);
+}
