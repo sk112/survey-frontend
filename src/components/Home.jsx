@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
-import {Question} from './Question';
+import { Question } from './Question';
 
-export default function Home(){
+export default function Home() {
     const [id, setId] = useState(null);
     const [questions, setQuestions] = useState(() => []);
-    const [answers, setAnswers] = useState(() => {});
+    const [answers, setAnswers] = useState(() => { });
     const [total, setTotal] = useState(0);
-  
+
     useEffect(() => {
-      
+
         fetch('http://localhost:5002/questions')
-        .then((resp) => resp.json())
-        .then(result => {
-            console.log(result);
-            setId(result.id);
-            setQuestions(result.questions);
-            setTotal(result.total)
-        })
+            .then((resp) => resp.json())
+            .then(result => {
+                console.log(result);
+                setId(result.id);
+                setQuestions(result.questions);
+                setTotal(result.total)
+            })
     }, [])
-  
+
     useEffect(() => {
-      console.log("answers", answers)
+        console.log("answers", answers)
     }, [answers])
     let navigate = useNavigate();
 
@@ -38,14 +38,18 @@ export default function Home(){
         setAnswers(answers)
     }, [questions, id, setAnswers])
 
+    useEffect(() => {
+        console.log('questions', questions)
+    }, [questions])
+
     const submitHandler = () => {
-        
+
         let keys = Object.keys(answers['answers'])
 
         console.log(keys.length, Object.keys(questions).length)
         console.log(keys, Object.keys(questions))
-        
-        if(keys.length !== Object.keys(questions).length){
+
+        if (keys.length !== Object.keys(questions).length) {
             alert('Answer all questions!!')
             return
         }
@@ -53,10 +57,10 @@ export default function Home(){
         let request = {}
         request['u_id'] = id;
         request['as'] = []
-        for(let k of Object.keys(answers['answers'])){
-            request['as'].push({"u_id": id, "q_id": answers['questions'][k]['varname'], "answer": answers['answers'][k]})
+        for (let k of Object.keys(answers['answers'])) {
+            request['as'].push({ "u_id": id, "q_id": answers['questions'][k]['varname'], "answer": answers['answers'][k] })
         }
-        
+
         console.log('Submit: ', JSON.stringify(request))
         fetch("http://localhost:5002/submit", {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -64,35 +68,61 @@ export default function Home(){
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
             credentials: 'same-origin', // include, *same-origin, omit
             headers: {
-              'Content-Type': 'application/json'
-              // 'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             redirect: 'follow', // manual, *follow, error
             referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
             body: JSON.stringify(request) // body data type must match "Content-Type" header
-          })
-          .then(response => response.json())
-          .then(data => {
-              console.log(data)
-              if(data['success'] === true){
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                if (data['success'] === true) {
                     navigate("/other")
-              }
-          })
-          .catch(err => console.log('Error: ', err))
+                }
+            })
+            .catch(err => console.log('Error: ', err))
     }
 
     return (
-        <table class="table table-bordered container">
-            {
-            questions.map((question, index) => {
-                return (
-                   <tr key={question['varname']+index}>
-                        <Question q={question} index={index+1} varname={question['varname']} setAnswers={setAnswers}/>
-                   </tr>
-                )
-            })
-            }
-            <button onClick={submitHandler}>Submit</button>
-        </table>
+
+        (questions !== null && questions.length > 0) ?
+            (
+                <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                <table class="table table-bordered container">
+                    <thead>
+                        <tr>
+                            <td className="w-100">
+                                Questions
+                            </td>
+                            {
+                                [...Array(7)].map((v, i) => {
+                                    let option = "option" + (i + 1);
+                                    return (
+                                        <td className="text-center">
+                                            {questions[0][option]}
+                                        </td>
+                                    )
+                                })
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            questions.map((question, index) => {
+                                return (
+                                    <tr key={question['varname'] + index}>
+                                        <Question q={question} index={index + 1} varname={question['varname']} setAnswers={setAnswers} />
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+                <button className="btn btn-primary" style={{width: "150px"}} onClick={submitHandler}>Submit</button>
+                </div>
+            ) : <></>
+
     )
 }
